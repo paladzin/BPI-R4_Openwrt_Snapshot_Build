@@ -50,4 +50,4 @@ Its a set and forget script, once set with all your custom settings all you have
      `./Openwrt_Snapshot.sh`
 
 ## **Notes**
-Please note - I use this script for test new snapshots etc... Snapshot builds can be unstable and problematic using them on a main router.
+Please note - I use this script for testing new snapshots etc... Snapshot builds can be unstable and problematic using them on a main router.

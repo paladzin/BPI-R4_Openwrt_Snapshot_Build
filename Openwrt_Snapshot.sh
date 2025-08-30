@@ -27,7 +27,7 @@ fi
 # --- uci-defaults Scripts Selectable Options ---
 # Change this variable to select a different setup script from the 'scripts' directory.
 # To use - SETUP_SCRIPT_NAME="999-simple-dumb_AP-wifi-Setup.sh" or "" (an empty string) to skip this step entirely.
-readonly SETUP_SCRIPT_NAME="999-simple-dumb_AP-wifi-Setup.sh"
+readonly SETUP_SCRIPT_NAME="998-simple-main-router-wifi-Setup.sh"
 
 
 # Define OpenWrt repository details. The commit hash for latest commint will be determined at runtime.
