@@ -12,7 +12,7 @@ The Sctipt is very similar to all my other auto scripts, except this script you 
 
 4. You can also add already configered config files (e.g., shadow, network) into the files/etc/ or files/config/ directories.
 
-5. And for build config, you can add what ever packages you need to the .config in config folder
+5. And for build config, you can add what ever packages you need to the .config in config folder such as **CONFIG_WIFI_SCRIPTS_UCODE=y** etc
 
 
 ## **How to Use**
@@ -48,4 +48,4 @@ The Sctipt is very similar to all my other auto scripts, except this script you 
      `./Openwrt_Snapshot.sh`
 
 ## **Notes**
-The build process will begin and may take a significant amount of time, depending on your system's performance. Once complete, the firmware images will be located in the `openwrt/bin/targets/mediatek/filogic/ directory`.
+The build process will begin and may take a significant amount of time, depending on your system's performance. Once complete, the firmware images will be located in the `openwrt/bin/targets/mediatek/filogic/` directory.
