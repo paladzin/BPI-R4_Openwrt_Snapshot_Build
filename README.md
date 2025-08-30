@@ -28,7 +28,7 @@ The Sctipt is very similar to all my other auto scripts, except this script you 
 
 2. **Clone repo**:
 
-   `git clone https://github.com/Gilly1970/BPI-R4_Openwrt_Plus_MTK.git`
+   `git clone https://github.com/Gilly1970/BPI-R4_Openwrt_Snapshot_Build.git`
    
    `sudo chmod 776 -R Openwrt_Snapshot.sh`
 
