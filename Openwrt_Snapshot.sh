@@ -27,7 +27,7 @@ fi
 # --- uci-defaults Scripts Selectable Options ---
 # Change this variable to select a different setup script from the 'scripts' directory.
 # To use - SETUP_SCRIPT_NAME="999-simple-dumb_AP-wifi-Setup.sh" or "" (an empty string) to skip this step entirely.
-readonly SETUP_SCRIPT_NAME="999-bedroom_AP-wifi-Setup.sh"
+readonly SETUP_SCRIPT_NAME="999-simple-dumb_AP-wifi-Setup.sh"
 
 
 # Define OpenWrt repository details. The commit hash for latest commint will be determined at runtime.
@@ -105,6 +105,20 @@ apply_patches() {
 	# Various hardware and software patches
     log "Applying hardware and software patches..."
     cp "$SOURCE_PATCH_DIR/200-v.kosikhin-libiwinfo-fix_noise_reading_for_radios.patch" "$OPENWRT_DIR/package/network/utils/iwinfo/patches/"
+	
+	# BPI-R4 - BE14 pathces - fix EEPROM issues with the faulty BE14 cards.. (Comment out the below patches, if your card doesn't have EEPROM issues)
+	log "Applying patches for the faulty BE14 EEPROM cards..."
+    local target_dirs=("$OPENWRT_DIR"/target/linux/mediatek/patches-6.*)
+	
+	if [[ ${#target_dirs[@]} -eq 1 && -d "${target_dirs[0]}" ]]; then
+        local final_target_dir="${target_dirs[0]}/subsys"
+        log "Found target patch directory: $final_target_dir"
+        mkdir -p "$final_target_dir"
+        cp "$SOURCE_PATCH_DIR/999-mt7988a-bananapi-bpi-r4-BE14000-binmode.patch" "$final_target_dir/"
+    else
+        log "Warning: Could not find target/linux/mediatek/ patch directory matching 'patches-6.*'."
+        log "Found ${#target_dirs[@]} matches, skipping patch. Check path: $OPENWRT_DIR/target/linux/mediatek/"
+    fi
 	
 }
 
