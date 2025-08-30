@@ -4,6 +4,8 @@ This is my test script for compling the latest OpenWRT SnapShot builds which I t
 
 The Sctipt is very similar to all my other auto scripts, except this script you set the branch and it will automaticly find the latest commit on that branch to build.
 
+Its a set and forget script, once set with all your custom settings all you have to do is just run it to get the latest up to date snapshot.
+
 1. You can change branches like "openwrt-24.10" , "master" , "main" etc...
 
 2. You can use custom patches 
@@ -48,4 +50,4 @@ The Sctipt is very similar to all my other auto scripts, except this script you 
      `./Openwrt_Snapshot.sh`
 
 ## **Notes**
-The build process will begin and may take a significant amount of time, depending on your system's performance. Once complete, the firmware images will be located in the `openwrt/bin/targets/mediatek/filogic/` directory.
+Please note - I use this script for test new snapshots etc... Snapshot builds can be unstable and problematic using them on a main router.
