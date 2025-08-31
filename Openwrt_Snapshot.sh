@@ -114,7 +114,7 @@ apply_patches() {
         local final_target_dir="${target_dirs[0]}/subsys"
         log "Found target patch directory: $final_target_dir"
         mkdir -p "$final_target_dir"
-        cp "$SOURCE_PATCH_DIR/999-mt7988a-bananapi-bpi-r4-BE14000-binmode.patch" "$final_target_dir/"
+        cp "$SOURCE_PATCH_DIR/99999_tx_power_check.patch" "$final_target_dir/"
     else
         log "Warning: Could not find target/linux/mediatek/ patch directory matching 'patches-6.*'."
         log "Found ${#target_dirs[@]} matches, skipping patch. Check path: $OPENWRT_DIR/target/linux/mediatek/"
