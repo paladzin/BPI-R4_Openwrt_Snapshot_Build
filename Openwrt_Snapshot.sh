@@ -3,16 +3,17 @@
 # BPI-R4 - OpenWrt with SnapShot Build Script
 # ==================================================================================
 # Please Note - IF you use the custom setup scripts for 'uci-defaults'.. As a precaution
-#                 they will be auto convert with the dos2unix tool to correct any DOS line
-#                 endings that may be present. Some users edit in windows and pass the
-#                 files across to the build system, which can causes errors in unix based
-#                 systems.
+#               they will be auto convert with the dos2unix tool to correct any DOS line
+#               endings that may be present. Some users edit in windows and pass the
+#               files across to the build system, which can causes errors in unix based
+#               systems.
 # Build system Install Note  - Run on Ubuntu 24.04 or later
 #                            - sudo apt update
 #                            - sudo apt install dos2unix
 # Usage:
 #
 #   ./Openwrt_Snapshot.sh
+#   ./Openwrt_Snapshot.sh -b openwrt-24.10
 #
 # ==================================================================================
 
@@ -24,26 +25,27 @@ if ! command -v dos2unix &> /dev/null; then
     exit 1
 fi
 
-# --- uci-defaults Scripts Selectable Options ---
-# Change this variable to select a different setup script from the 'scripts' directory.
-# To use - SETUP_SCRIPT_NAME="999-simple-dumb_AP-wifi-Setup.sh" or "" (an empty string) to skip this step entirely.
-readonly SETUP_SCRIPT_NAME="998-simple-main-router-wifi-Setup.sh"
-
-
-# Define OpenWrt repository details. The commit hash for latest commint will be determined at runtime.
 readonly OPENWRT_REPO="https://git.openwrt.org/openwrt/openwrt.git"
-readonly OPENWRT_BRANCH="main"                                        # Branch can be changed to "openwrt-24.10" , "master" , "main" etc...
+OPENWRT_BRANCH="openwrt-24.10"
+
+# To build a specific commit, paste the full hash here.
+# To build the latest commit from the branch, leave this string empty (e.g., "").
+readonly OPENWRT_COMMIT=""
+
 
 # Define local directory names.
-readonly SOURCE_PATCH_DIR="patches"
-readonly SOURCE_FILES_DIR="files"
-readonly SETUP_SCRIPT_SOURCE_DIR="scripts"
+readonly OPENWRT_PATCHES_DIR="openwrt-patches"
 readonly CONFIG_FILES_DIR="config"
 readonly OPENWRT_DIR="openwrt"
 readonly SCRIPT_EXECUTABLE_NAME=$(basename "$0")
 
 
 # --- Functions ---
+show_usage() {
+    echo "Usage: $SCRIPT_EXECUTABLE_NAME [-b <branch_name>]"
+    echo "  -b <branch_name>  Specify the OpenWrt branch to build (e.g., openwrt-23.05). Defaults to 'main'."
+    exit 1
+}
 
 log() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] - $1" >&2
@@ -92,92 +94,68 @@ setup_openwrt_repo() {
     (cd "$target_dir" && git checkout "$commit_hash")
     log "Successfully checked out commit."
 }
-# --- Applies all patches from the patches directory to the build tree ---
-#         - You can edit add, delete or "" any of the below patches to your liking...
-apply_patches() {
-    log "--- Applying custom patches ---"
 
-    if [ ! -d "$SOURCE_PATCH_DIR" ]; then
-        log "No patch directory ('$SOURCE_PATCH_DIR') found. Skipping."
-        return
-    fi
-	
-	# Various hardware and software patches
-    log "Applying hardware and software patches..."
-    cp "$SOURCE_PATCH_DIR/200-v.kosikhin-libiwinfo-fix_noise_reading_for_radios.patch" "$OPENWRT_DIR/package/network/utils/iwinfo/patches/"
-	
-	# BPI-R4 - BE14 pathces - fix EEPROM issues with the faulty BE14 cards.. (Comment out the below patches, if your card doesn't have EEPROM issues)
-	log "Applying patches for the faulty BE14 EEPROM cards..."
-    local target_dirs=("$OPENWRT_DIR"/target/linux/mediatek/patches-6.*)
-	
-	if [[ ${#target_dirs[@]} -eq 1 && -d "${target_dirs[0]}" ]]; then
-        local final_target_dir="${target_dirs[0]}/subsys"
-        log "Found target patch directory: $final_target_dir"
-        mkdir -p "$final_target_dir"
-        cp "$SOURCE_PATCH_DIR/99999_tx_power_check.patch" "$final_target_dir/"
-    else
-        log "Warning: Could not find target/linux/mediatek/ patch directory matching 'patches-6.*'."
-        log "Found ${#target_dirs[@]} matches, skipping patch. Check path: $OPENWRT_DIR/target/linux/mediatek/"
-    fi
-	
+prompt_for_menuconfig() {
+    log "--- Configuration Choice ---"
+    echo "Would you like to run 'make menuconfig' to modify the configuration?"
+    echo "You have 10 seconds to answer. The default is 'no' (use existing .config)."
+    read -t 10 -p "Enter (yes/no): " user_choice || true
+
+    case "${user_choice,,}" in
+        y|yes)
+            log "User chose 'yes'. Running 'make menuconfig'..."
+            make menuconfig
+            log "Saving a copy of the new configuration to '../$CONFIG_FILES_DIR/.config.new'..."
+            cp .config "../$CONFIG_FILES_DIR/.config.new"
+            log "New configuration saved."
+            ;;
+        n|no)
+            log "User chose 'no'. Skipping 'make menuconfig'."
+            ;;
+        *)
+            log "No input received within 10 seconds. Defaulting to 'no'."
+            log "Skipping 'make menuconfig'."
+            ;;
+    esac
 }
 
-# --- Prepares custom configuration files, scripts, and permissions.
-#           - Do not change any thing below this point.. (unless you know what your doing of course ;) 
-prepare_custom_files() {
-    log "--- Preparing custom files and scripts ---"
+prepare_source_patches_and_files() {
+    log "--- Preparing all source patches and custom files ---"
+
+    if [ ! -d "$OPENWRT_PATCHES_DIR" ]; then
+        log "No source patch directory ('$OPENWRT_PATCHES_DIR') found to process. Skipping."
+        return
+    fi
+
+    log "Checking for and removing '.gitkeep' placeholders..."
+    find "$OPENWRT_PATCHES_DIR" -type f -name ".gitkeep" -delete
     
-    local target_files_root="$OPENWRT_DIR/files"
+    log "Running dos2unix on all source files..."
+    find "$OPENWRT_PATCHES_DIR" -type f -exec dos2unix {} +
 
-    log "Checking for custom files in '$SOURCE_FILES_DIR' directory..."
-    if [ ! -d "$SOURCE_FILES_DIR" ]; then
-        log "Source directory '$SOURCE_FILES_DIR' not found. Skipping custom file copy."
-    else
-        log "Checking for and removing '.gitkeep' placeholders..."
-        find "$SOURCE_FILES_DIR" -type f -name ".gitkeep" -delete
-
-        if [ -n "$(find "$SOURCE_FILES_DIR" -type f)" ]; then
-            log "Found custom files. Copying to '$target_files_root'..."
-            mkdir -p "$target_files_root"
-            cp -a "$SOURCE_FILES_DIR"/. "$target_files_root/"
-        else
-            log "No custom files to copy. Skipping."
-        fi
+    log "Setting permissions on all source files and directories..."
+    find "$OPENWRT_PATCHES_DIR" -type d -exec chmod 755 {} +
+    find "$OPENWRT_PATCHES_DIR" -type f -exec chmod 644 {} +
+    
+    local uci_defaults_dir="$OPENWRT_PATCHES_DIR/files/etc/uci-defaults"
+    if [ -d "$uci_defaults_dir" ]; then
+         log "Making all uci-defaults scripts executable..."
+         find "$uci_defaults_dir" -type f -exec chmod 755 {} +
     fi
+    log "Source file processing complete."
+}
 
-    if [ -n "$SETUP_SCRIPT_NAME" ]; then
-        local script_source_path="$SETUP_SCRIPT_SOURCE_DIR/$SETUP_SCRIPT_NAME"
-        local uci_defaults_path="$target_files_root/etc/uci-defaults"
+apply_patches_and_files() {
+    log "--- Applying custom patches and files from '$OPENWRT_PATCHES_DIR' ---"
 
-        log "Setup script is defined: '$SETUP_SCRIPT_NAME'. Looking for it at '$script_source_path'..."
-
-        if [ ! -f "$script_source_path" ]; then
-            log "==================================================================="
-            log "  ERROR: Setup script not found at: $script_source_path"
-            log "==================================================================="
-            exit 1
-        fi
-        
-        log "Adding setup script to uci-defaults..."
-        mkdir -p "$uci_defaults_path"
-        cp "$script_source_path" "$uci_defaults_path/"
-    else
-        log "No setup script selected (SETUP_SCRIPT_NAME is empty). Skipping uci-defaults."
+    if [ ! -d "$OPENWRT_PATCHES_DIR" ] || [ -z "$(ls -A "$OPENWRT_PATCHES_DIR")" ]; then
+        log "Source directory '$OPENWRT_PATCHES_DIR' not found or is empty. Nothing to apply."
+        return
     fi
-
-    if [ -d "$target_files_root" ]; then
-        log "Running dos2unix on all files in '$target_files_root'..."
-        find "$target_files_root" -type f -exec dos2unix {} +
-
-        log "Setting permissions on copied files and directories..."
-        find "$target_files_root" -type d -exec chmod 755 {} +
-        find "$target_files_root" -type f -exec chmod 644 {} +
-        
-        if [ -d "$target_files_root/etc/uci-defaults" ]; then
-             log "Making all uci-defaults scripts executable..."
-             find "$target_files_root/etc/uci-defaults" -type f -exec chmod 755 {} +
-        fi
-    fi
+    
+    log "Copying all content to the OpenWrt source directory..."
+    cp -a "$OPENWRT_PATCHES_DIR/." "$OPENWRT_DIR/"
+    log "All patches and files have been copied successfully."
 }
 
 run_openwrt_build() {
@@ -208,6 +186,8 @@ run_openwrt_build() {
         log "Validating and expanding final .config..."
         make defconfig
 
+        prompt_for_menuconfig
+
         log "Starting the build... This could take a very long time."
         make "-j$(nproc)" V=s
     )
@@ -217,29 +197,50 @@ run_openwrt_build() {
 
 # --- Main Execution ---
 main() {
+    while getopts ":b:" opt; do
+        case ${opt} in
+            b )
+                OPENWRT_BRANCH=$OPTARG
+                ;;
+            \? )
+                echo "Invalid Option: -$OPTARG" 1>&2
+                show_usage
+                ;;
+            : )
+                echo "Invalid Option: -$OPTARG requires an argument" 1>&2
+                show_usage
+                ;;
+        esac
+    done
+    shift "$((OPTIND -1))"
+
     log "--- Starting OpenWrt Setup ---"
+    log "Using OpenWrt branch: $OPENWRT_BRANCH"
     
     require_command "git"
     require_command "awk"
     require_command "make"
 
     local target_commit
-    target_commit=$(get_latest_commit_hash "$OPENWRT_REPO" "$OPENWRT_BRANCH")
-    log "Latest commit hash for '$OPENWRT_BRANCH' is: $target_commit"
+    if [ -n "$OPENWRT_COMMIT" ]; then
+        target_commit="$OPENWRT_COMMIT"
+        log "Using specified commit hash: $target_commit"
+    else
+        target_commit=$(get_latest_commit_hash "$OPENWRT_REPO" "$OPENWRT_BRANCH")
+        log "Latest commit hash for '$OPENWRT_BRANCH' is: $target_commit"
+    fi
 
     setup_openwrt_repo "$OPENWRT_REPO" "$OPENWRT_BRANCH" "$target_commit" "$OPENWRT_DIR"
     
-    apply_patches
+    prepare_source_patches_and_files
 
-    prepare_custom_files
+    apply_patches_and_files
     
     run_openwrt_build
     
     log "--- You can find the output images in '$OPENWRT_DIR/bin/targets/mediatek/filogic/' ---"
 }
 
-# Run the main function.
-main
+main "$@"
 
 exit 0
-
