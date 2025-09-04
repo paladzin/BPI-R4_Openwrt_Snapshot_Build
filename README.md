@@ -18,7 +18,7 @@ So here it is, a more simplified version of my original build script, without ha
 
 3. Created a new "openwrt-patches" directory which mirrors the "openwrt" directory tree, any patch or file placed inside will be applied to the same openwrt patch directory, removing the need to edit the script.. 
      * e.g.. "openwrt-patches/target/linux/mediatek/patches-6.6/some.patch" will be applied to the "openwrt/target/linux/mediatek/patches-6.6/some.patch" directory.
-     * If you want to remove a patch just remove it fron the openwrt-patches directory.. e.g. "openwrt-patches/target/linux/mediatek/patches-6.6/some.patch".
+     * If you want to remove a patch just remove it from the openwrt-patches directory.. e.g. "openwrt-patches/target/linux/mediatek/patches-6.6/some.patch".
 	 * Add any custom wireless, network config files to "openwrt-patches/files/etc/config/wireless" and it will be included in the built image.
 	 * Add any custom uci-defaults script into "openwrt-patches/files/etc/uci-defaults/" and it will be built into the image.
 
