@@ -40,9 +40,9 @@ Please note - No directory with sub folders on github can be empty, so the use o
 			- When using patches. If you have a build fail, read the fail messages and remove the patch causing the error.. 
 			- With every new commit files are checnged and patches that work now might not work with next new commit.
 			
-       note - I've left my default patches I use in the repo as examples so delete what you don't want to kept.. before first build
-            - If you have the faulty BE14 card with the EEPROM issues.. The two patches are located in "openwrt-patches/package/kernel/mt76/patches/" directory already.
-			- If you don't have the faulty BE14 card delete the two patches located in the "openwrt-patches/package/kernel/mt76/patches/" directory.
+        - I've left my default patches I use in the repo as examples so delete what you don't want to kept.. before first build
+        - If you have the faulty BE14 card with the EEPROM issues.. The two patches are located in "openwrt-patches/package/kernel/mt76/patches/" directory already.
+		- If you don't have the faulty BE14 card delete the two patches located in the "openwrt-patches/package/kernel/mt76/patches/" directory.
 
 ## **How to Use**
 
