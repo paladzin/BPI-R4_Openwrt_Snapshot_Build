@@ -11,10 +11,12 @@ Major update to the original build script, which bings it inline with my other s
 2. If you want to build with the latest openwrt kernel leave this empty OPENWRT_COMMIT="" empty.
 
 3. Added a new directories to place all patches and files into "openwrt-patches".
-     * e.g.. "openwrt-patches/target/linux/mediatek/patches-6.6/some.patch" will be applied to the "openwrt/target/linux/mediatek/patches-6.6/some.patch" directory.
-     * If you want to remove a patch just remove it from the openwrt-patches directory.. e.g. "openwrt-patches/target/linux/mediatek/patches-6.6/some.patch".
-	 * Add any custom wireless, network config files to "openwrt-patches/files/etc/config/wireless" and it will be included in the built image.
-	 * Add any custom uci-defaults script into "openwrt-patches/files/etc/uci-defaults/" and it will be built into the image.
+     * Inside the direcory you drop in all your patches (openwrt-patches)
+	 * Inside the directory there is two files "openwrt-add-patch" and "openwrt-remove"
+	 * To add or remove a file or patch just enter the full target path into the file - target/linux/generic/backport-6.6/999-some.patch
+	 * The cp -f function works likes this.. "Some-Makefile:package/base-files/Makefile"
+	 * The mkdir -p function works like this.. Add the tree with the new dir  "Some-script.sh:files/etc/uci-defaults/new.sh" or "files/etc/uci-defaults/new.sh" in the correct add file.
+	 * The script will search each of the files at the start of the build and process all entries applying them to the targets.. (or removing them)
 
 4. You can place any custom .config files in side the "config" directory to use.
 
@@ -33,10 +35,6 @@ Please note - No directory with sub folders on github can be empty, so the use o
             - All .gitkeep files cloned will be deleted on the first excution of the script.. Or just delete them manually if you wish.
 			- When using patches. If you have a build fail, read the fail messages and remove the patch causing the error.. 
 			- With every new commit files are checnged and patches that work now might not work with next new commit.
-			
-    - I've left my default patches I use in the repo as examples so delete what you don't want to kept.. before first build
-    - If you have the faulty BE14 card with the EEPROM issues.. The two patches are located in "openwrt-patches/package/kernel/mt76/patches/" directory already.
-	- If you don't have the faulty BE14 card delete the two patches located in the "openwrt-patches/package/kernel/mt76/patches/" directory.
 
 ## **How to Use**
 
