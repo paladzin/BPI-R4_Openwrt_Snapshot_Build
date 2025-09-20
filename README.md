@@ -2,21 +2,15 @@
 
 This is my test script for compling the latest OpenWRT SnapShot builds which I thought someone else might find usefull so though I'd share it here...
 
-The Sctipt is very similar to all my other auto scripts, except this script you set the branch and it will automaticly find the latest commit on that branch to build.
-
-Its a set and forget script, once set with all your custom settings all you have to do is just run it to get the latest up to date snapshot.
+Major update to the original build script, which bings it inline with my other scripts. New script incorperates the "rsync" function to improve the handling of scripts and patches. I've also include a new option to clone the main repos from a local repo.  
 
 # **Updated SnapShot Build Script**
 
-One of the openwrt forum members (Jimmy_D) asked if I could simplify the way patches and scipts are incorperated into the script.. ?
-
-So here it is, a more simplified version of my original build script, without having to modify anything in the actual script itself.. to add or delete patches etc
-
 1. You can change branches "openwrt-24.10" , "master" , "main" etc...
 
-2. Added the option to build a specific commit if needed..
+2. If you want to build with the latest openwrt-24.10 kernels and the latest mtk commits leave both OPENWRT_COMMIT="" & MTK_FEEDS_COMMIT="" empty.
 
-3. Created a new "openwrt-patches" directory which mirrors the "openwrt" directory tree, any patch or file placed inside will be applied to the same openwrt patch directory, removing the need to edit the script.. 
+3. Added a new directories to place all patches and files into "openwrt-patches".
      * e.g.. "openwrt-patches/target/linux/mediatek/patches-6.6/some.patch" will be applied to the "openwrt/target/linux/mediatek/patches-6.6/some.patch" directory.
      * If you want to remove a patch just remove it from the openwrt-patches directory.. e.g. "openwrt-patches/target/linux/mediatek/patches-6.6/some.patch".
 	 * Add any custom wireless, network config files to "openwrt-patches/files/etc/config/wireless" and it will be included in the built image.
@@ -55,7 +49,7 @@ Please note - No directory with sub folders on github can be empty, so the use o
 
    `git clone https://github.com/Gilly1970/BPI-R4_Openwrt_Snapshot_Build.git`
    
-   `sudo chmod 776 -R BPI-R4_Openwrt_Snapshot_Build`
+   `sudo chmod 775 -R BPI-R4_Openwrt_Snapshot_Build`
 
 3. **Run the Script**:  
    * Make the script executable:  
@@ -65,4 +59,6 @@ Please note - No directory with sub folders on github can be empty, so the use o
      `./Openwrt_Snapshot.sh`
 
 ## **Notes**
-Please note - I use this script for testing new snapshots etc... Snapshot builds can be unstable and problematic using them on a main router.
+For those with the really bad BE14 cards with the 0 eeprom - You will find the new "9998-kernel-6.12-EEPROM-contains-0s.patch" in the openwrt-patches directory. (may not work with other kernels)
+
+Please note - I've combined the same logic from both original patches into the one patch, so only this one patch is needed.

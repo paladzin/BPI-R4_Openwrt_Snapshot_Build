@@ -1,0 +1,6 @@
+package/network/utils/iwinfo/patches/200-v.kosikhin-libiwinfo-fix_noise_reading_for_radios.patch
+target/linux/mediatek/patches-6.6/1007-mt7988a.dtsi.patch
+package/kernel/mt76/patches/9998-kernel-6.12-EEPROM-contains-0s.patch
+
+
+
