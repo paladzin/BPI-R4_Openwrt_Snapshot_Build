@@ -8,7 +8,7 @@ Major update to the original build script, which bings it inline with my other s
 
 1. You can change branches "openwrt-24.10" , "master" , "main" etc...
 
-2. If you want to build with the latest openwrt-24.10 kernels and the latest mtk commits leave both OPENWRT_COMMIT="" & MTK_FEEDS_COMMIT="" empty.
+2. If you want to build with the latest openwrt kernel leave this empty OPENWRT_COMMIT="" empty.
 
 3. Added a new directories to place all patches and files into "openwrt-patches".
      * e.g.. "openwrt-patches/target/linux/mediatek/patches-6.6/some.patch" will be applied to the "openwrt/target/linux/mediatek/patches-6.6/some.patch" directory.
