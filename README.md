@@ -57,6 +57,28 @@ Please note - No directory with sub folders on github can be empty, so the use o
      `./Openwrt_Snapshot.sh`
 
 ## **Notes**
-For those with the really bad BE14 cards with the 0 eeprom - You will find the new "9998-kernel-6.12-EEPROM-contains-0s.patch" in the openwrt-patches directory. (may not work with other kernels)
 
-Please note - I've combined the same logic from both original patches into the one patch, so only this one patch is needed.
+Known issue with 6g regulatory information so currently only GB or JP work for 6g. 
+
+Experimental patch for the BE14 cards with the 0'd eeproms - I've extracted the eeprom.bin from my good BE14 card which this new test patch uses instead of the default fallback .bin that comes with the default dirvers. From my initial testing I'm now able to correctly set the tx power value on all three raido's.
+
+Script is updated to compile with the new patch, if you don't need it then just remove the relevant entries from the openwrt-add-patch file.
+
+If you want to test this new patch without using this script.. 
+
+1. bpi-r4-eeprom.bin
+	 * mkdir -p openwrt/package/firmware/bpi-r4-eeprom-data/files
+	 * cp openwrt/package/firmware/bpi-r4-eeprom-data/files/bpi-r4-eeprom.bin
+
+2. epprom.bin_Makefile
+	 * rename "epprom.bin_Makefile to Makefile
+	 * cp openwrt/package/firmware/bpi-r4-eeprom-data/Makefile
+
+3. 0131-mtk-mt76-mt7996-fix-kernel-6.106-EEPROM-0s-bin.patch
+	 * cp openwrt/package/kernel/mt76/patches/9998-kernel-6.12-EEPROM-contains-0s-fix-bin.patch
+
+4. CONFIG_PACKAGE_bpi-r4-eeprom-data=y
+	 * Add "CONFIG_PACKAGE_bpi-r4-eeprom-data=y" into your openwrt/.config file before compiling.
+	 
+5. To set tx power value add sku_idx to wireless config e.g. config wifi-device 'radio0'
+	 * option sku_idx '0'
