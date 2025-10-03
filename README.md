@@ -74,8 +74,8 @@ If you want to test this new patch without using this script..
 	 * rename "epprom.bin_Makefile to Makefile
 	 * cp openwrt/package/firmware/bpi-r4-eeprom-data/Makefile
 
-3. 0131-mtk-mt76-mt7996-fix-kernel-6.106-EEPROM-0s-bin.patch
-	 * cp openwrt/package/kernel/mt76/patches/9998-kernel-6.12-EEPROM-contains-0s-fix-bin.patch
+3. 9997-kernel-6.12-EEPROM-contains-0s-fix-bin.patch
+	 * cp openwrt/package/kernel/mt76/patches/9997-kernel-6.12-EEPROM-contains-0s-fix-bin.patch
 
 4. CONFIG_PACKAGE_bpi-r4-eeprom-data=y
 	 * Add "CONFIG_PACKAGE_bpi-r4-eeprom-data=y" into your openwrt/.config file before compiling.
