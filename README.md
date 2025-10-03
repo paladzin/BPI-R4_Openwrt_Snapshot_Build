@@ -79,6 +79,4 @@ If you want to test this new patch without using this script..
 
 4. CONFIG_PACKAGE_bpi-r4-eeprom-data=y
 	 * Add "CONFIG_PACKAGE_bpi-r4-eeprom-data=y" into your openwrt/.config file before compiling.
-	 
-5. To set tx power value add sku_idx to wireless config e.g. config wifi-device 'radio0'
-	 * option sku_idx '0'
+
