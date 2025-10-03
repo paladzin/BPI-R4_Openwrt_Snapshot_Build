@@ -34,7 +34,7 @@ Major update to the original build script, which bings it inline with my other s
 Please note - No directory with sub folders on github can be empty, so the use of blank ".gitkeep" files are used to create empty sub directories..
             - All .gitkeep files cloned will be deleted on the first excution of the script.. Or just delete them manually if you wish.
 			- When using patches. If you have a build fail, read the fail messages and remove the patch causing the error.. 
-			- With every new commit files are checnged and patches that work now might not work with next new commit.
+			- With every new commit files are changed and patches that work now might not work with next new commit.
 
 ## **How to Use**
 
