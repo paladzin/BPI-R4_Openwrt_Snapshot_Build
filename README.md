@@ -58,7 +58,7 @@ Please note - No directory with sub folders on github can be empty, so the use o
 
 ## **Notes**
 
-Known issue with 6g regulatory information so currently only GB or JP work for 6g. 
+Added new patch to add wmmrule=ETSI to all 6 GHz entries which are currenty missing this enforced rule for 6GHz band. All FCC/ETSI cuntries without this rule are silently ignored by the drivers on the 6GHz band. 
 
 Experimental patch for the BE14 cards with the 0'd eeproms - I've extracted the eeprom.bin from my good BE14 card which this new test patch uses instead of the default fallback .bin that comes with the default dirvers. From my initial testing I'm now able to correctly set the tx power value on all three raido's.
 

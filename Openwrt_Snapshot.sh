@@ -33,9 +33,9 @@ fi
 
 # OpenWrt Source Details
 # --- Use this line for remote cloning ---
-readonly OPENWRT_REPO="https://git.openwrt.org/openwrt/openwrt.git"
+#readonly OPENWRT_REPO="https://git.openwrt.org/openwrt/openwrt.git"
 # --- Use this line for local testing (uncomment and set your path) ---
-#readonly OPENWRT_REPO="/home/gilly/repos/master/openwrt"
+readonly OPENWRT_REPO="/home/gilly/repos/master/openwrt"
 
 OPENWRT_BRANCH="master"
 readonly OPENWRT_COMMIT=""
