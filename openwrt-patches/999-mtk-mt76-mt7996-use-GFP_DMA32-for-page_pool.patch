@@ -1,0 +1,24 @@
+From 35bc8effe9e495ccded5d6722b299dafadce060e Mon Sep 17 00:00:00 2001
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+Date: Mon, 6 Oct 2025 08:06:15 -0500
+Subject: [PATCH] mt76: use GFP_DMA32 for page_pool
+
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+---
+ mt76.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/mt76.h b/mt76.h
+index f5051b28c..36ec3a650 100644
+--- a/mt76.h
++++ b/mt76.h
+@@ -1864,7 +1864,8 @@ mt76_get_page_pool_buf(struct mt76_queue *q, u32 *offset, u32 size)
+ {
+ 	struct page *page;
+ 
+-	page = page_pool_dev_alloc_frag(q->page_pool, offset, size);
++	page = page_pool_alloc_frag(q->page_pool, offset, size,
++				    GFP_ATOMIC | __GFP_NOWARN | GFP_DMA32);
+ 	if (!page)
+ 		return NULL;
+ 
