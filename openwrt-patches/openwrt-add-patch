@@ -1,10 +1,4 @@
 package/network/utils/iwinfo/patches/200-v.kosikhin-libiwinfo-fix_noise_reading_for_radios.patch
-package/kernel/mt76/patches/9997-kernel-6.12-EEPROM-contains-0s-fix-bin.patch
-package/firmware/bpi-r4-eeprom-data/files/bpi-r4-eeprom.bin
-epprom.bin_Makefile:package/firmware/bpi-r4-eeprom-data/Makefile
+package/kernel/mt76/patches/9999-kernel-6.12-EEPROM-contains-0s.patch
 package/firmware/wireless-regdb/patches/505-wmm-rule-regd-6GHz.patch
-package/kernel/mt76/patches/999-mtk-mt76-mt7996-use-GFP_DMA32-for-page_pool.patch
-target/linux/mediatek/patches-6.12/999-lorenzo-wed-dma-mask-limitation.patch
-target/linux/mediatek/patches-6.12/999-use-proper-wed-reference-in-wed-kernel.patch
-package/kernel/mt76/patches/999-use-proper-wed-reference-in-wed-mt76.patch
 

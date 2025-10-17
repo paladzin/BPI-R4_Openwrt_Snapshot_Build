@@ -58,10 +58,6 @@ Please note - No directory with sub folders on github can be empty, so the use o
 
 ## **Notes**
 
-Added Lorenzo Bianconi patches for wed if anyone wants to test. After upgrading to new image install bridger and enable HW (hardware) offload, wed_enable=Y sr_scene_detect=Y is configered in /files/etc/modules.conf and will compiled into the build already enabled.
-
-Added new patch which adds the wmmrule=ETSI rule to all 6 GHz entries which are currenty missing this enforced rule for 6GHz band. All FCC/ETSI cuntries without this rule are silently ignored by the drivers on the 6GHz band. 
-
 Experimental patch for the BE14 cards with the 0'd eeproms - I've extracted the eeprom.bin from my good BE14 card which this new test patch uses instead of the default fallback .bin that comes with the default dirvers. From my initial testing I'm now able to correctly set the tx power value on all three raido's.
 
 Script is updated to compile with the new patch, if you don't need it then just remove the relevant entries from the openwrt-add-patch file.

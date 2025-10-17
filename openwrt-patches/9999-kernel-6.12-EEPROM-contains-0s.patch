@@ -1,17 +1,14 @@
-From 792a3f18b5ae1ce163f9cf342fb5b4ecc003e3ee Mon Sep 17 00:00:00 2001
-From: Gilly1970 <gilroyscott@hotmail.com>
-Date: Thu, 2 Oct 2025 19:58:19 +1000
-Subject: [PATCH] 9998-kernel-6.12-EEPROM-contains-0s-fix-bin-fix
+Subject: [PATCH] 9999-kernel-6.12-EEPROM-contains-0s
 
 ---
- mt7996/eeprom.c | 64 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+ mt7996/eeprom.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
 diff --git a/mt7996/eeprom.c b/mt7996/eeprom.c
-index da3231c..1fff0e1 100644
+index da3231c..3f6426c 100644
 --- a/mt7996/eeprom.c
 +++ b/mt7996/eeprom.c
-@@ -93,6 +93,46 @@ mt7996_eeprom_parse_stream(const u8 *eeprom, u8 band_idx, u8 *path,
+@@ -93,6 +93,44 @@ mt7996_eeprom_parse_stream(const u8 *eeprom, u8 band_idx, u8 *path,
  	}
  }
  
@@ -40,14 +37,12 @@ index da3231c..1fff0e1 100644
 +	 * This is a workaround for hardware with incorrect (but non-zero)
 +	 * tx_power values in the EEPROM.
 +	 */
-+	/*
 +	for (i = MT_EE_TX0_POWER_6G; i < MT_EE_TX0_POWER_6G + 8; ++i) {
 +		if (eeprom[i] != def[i]) {
 +			eeprom[i] = def[i];
 +			sixg_overridden = true;
 +		}
 +	}
-+	*/
 +
 +	if (zeros_detected)
 +		dev_warn(dev->mt76.dev, "eeprom tx_power zeros detected, using defaults\n");
@@ -58,7 +53,7 @@ index da3231c..1fff0e1 100644
  static bool mt7996_eeprom_variant_valid(struct mt7996_dev *dev, const u8 *def)
  {
  #define FEM_INT	0
-@@ -148,6 +188,8 @@ mt7996_eeprom_check_or_use_default(struct mt7996_dev *dev, bool use_default)
+@@ -148,6 +186,8 @@ mt7996_eeprom_check_or_use_default(struct mt7996_dev *dev, bool use_default)
  		goto out;
  	}
  
@@ -67,7 +62,7 @@ index da3231c..1fff0e1 100644
  	if (!use_default && mt7996_eeprom_variant_valid(dev, fw->data))
  		goto out;
  
-@@ -212,6 +254,28 @@ static int mt7996_eeprom_load(struct mt7996_dev *dev)
+@@ -212,6 +252,28 @@ static int mt7996_eeprom_load(struct mt7996_dev *dev)
  				goto out;
  			}
  		}
@@ -77,7 +72,7 @@ index da3231c..1fff0e1 100644
 +		if (!eeprom[MT_EE_TX0_POWER_2G] || !eeprom[MT_EE_TX0_POWER_5G] || !eeprom[MT_EE_TX0_POWER_6G] ) {
 +			const struct firmware *fw_eeprom;
 +
-+			ret = request_firmware(&fw_eeprom, "mediatek/mt7996/bpi-r4-eeprom.bin", dev->mt76.dev);
++			ret = request_firmware(&fw_eeprom, "mediatek/mt7996/mt7996_eeprom_233_2i5i6i.bin", dev->mt76.dev);
 +			if (!ret) {
 +				/* Success! Copy the good EEPROM data and proceed */
 +				memcpy(eeprom, fw_eeprom->data,
