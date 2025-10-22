@@ -308,7 +308,16 @@ main() {
         log "Latest commit for OpenWrt '$OPENWRT_BRANCH' is: $openwrt_commit"
     fi
     setup_repo "$OPENWRT_REPO" "$OPENWRT_BRANCH" "$openwrt_commit" "$OPENWRT_DIR" "OpenWrt"
-
+# --- Force switch OpenWrt feeds to GitHub mirrors ---
+   (
+    cd "$OPENWRT_DIR"
+    log "Replacing default OpenWrt feeds with GitHub mirrors..."
+    sed -i 's|https://git.openwrt.org/feed/packages.git|https://github.com/openwrt/packages.git|' feeds.conf.default
+    sed -i 's|https://git.openwrt.org/project/luci.git|https://github.com/openwrt/luci.git|' feeds.conf.default
+    sed -i 's|https://git.openwrt.org/feed/routing.git|https://github.com/openwrt/routing.git|' feeds.conf.default
+    sed -i 's|https://git.openwrt.org/feed/telephony.git|https://github.com/openwrt/telephony.git|' feeds.conf.default
+    log "Feeds successfully switched to GitHub."
+    )
     (
         cd "$OPENWRT_DIR"
         log "Updating and installing feeds to prepare the source tree..."
