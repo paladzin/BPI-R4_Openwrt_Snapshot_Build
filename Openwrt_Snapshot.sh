@@ -348,7 +348,7 @@ main() {
     log "--- Starting the main build... ---"
     (
         cd "$OPENWRT_DIR"
-        make -j"$(nproc)" -V=sc
+        make V=s -j"$(nproc)"
     )
     log "--- Main build process finished successfully! ---"
     log "--- You can find the images in '$OPENWRT_DIR/bin/targets/mediatek/filogic/' ---"
