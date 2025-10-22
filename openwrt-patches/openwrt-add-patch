@@ -2,4 +2,3 @@ package/network/utils/iwinfo/patches/200-v.kosikhin-libiwinfo-fix_noise_reading_
 package/kernel/mt76/patches/9999-kernel-6.12-EEPROM-contains-0s.patch
 package/firmware/wireless-regdb/patches/505-wmm-rule-regd-6GHz.patch
 mt7988a-bananapi-bpi-r4-disable-pcie2.dtso:target/linux/mediatek/files-6.12/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-disable-pcie2.dtso
-filogic.mk:target/linux/mediatek/image/filogic.mk
